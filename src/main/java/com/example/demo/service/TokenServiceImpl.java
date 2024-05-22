@@ -56,23 +56,25 @@ public class TokenServiceImpl implements TokenService {
                     .build()
                     .parseClaimsJws(token);
             
-            JwsHeader claimsHeader = claimsJws.getHeader();
-            System.out.println("headerClaimPersonalizado: " + claimsHeader.get("headerClaimPersonalizado"));
-            
-            Claims claimsBody = claimsJws.getBody();	
-            System.out.println("Subject: " + claimsBody.getSubject());
-            System.out.println("Expiration: " + claimsBody.getExpiration());
-            System.out.println("bodyClaimPersonalizado: " + claimsBody.get("bodyClaimPersonalizado"));
+//            JwsHeader claimsHeader = claimsJws.getHeader();
+//            System.out.println("headerClaimPersonalizado: " + claimsHeader.get("headerClaimPersonalizado"));
+//            
+//            Claims claimsBody = claimsJws.getBody();	
+//            System.out.println("Subject: " + claimsBody.getSubject());
+//            System.out.println("Expiration: " + claimsBody.getExpiration());
+//            System.out.println("bodyClaimPersonalizado: " + claimsBody.get("bodyClaimPersonalizado"));
+//            System.out.println();
             
             return true;
             
         } catch (SecurityException | IllegalArgumentException e) {
-        	System.out.println("Token Inválido: " + token);
+        	System.out.println("Token Inválido: " + token + "\n");
             return false;
         } catch (ExpiredJwtException e) {
-        	System.out.println("Token Expirado: " + token);
+        	System.out.println("Token Expirado: " + token + "\n");
             return false;
         }
     }
+    
 
 }
