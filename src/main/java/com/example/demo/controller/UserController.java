@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.User;
+import com.example.demo.dto.UserSavedResponse;
 import com.example.demo.service.UserService;
 
 @RestController
@@ -20,8 +21,8 @@ public class UserController {
 	UserService userService;
 	
 	@PostMapping("/saveUser")
-	public void saveUser(@RequestBody User user, @RequestParam String token) throws InterruptedException, ExecutionException {
-		userService.saveUser(user, token);
+	public UserSavedResponse saveUser(@RequestBody User user, @RequestParam String token) throws InterruptedException, ExecutionException {
+		return userService.saveUser(user, token);
 	}
 
 }

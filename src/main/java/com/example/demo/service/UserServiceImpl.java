@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.User;
+import com.example.demo.dto.UserSavedResponse;
 import com.example.demo.exception.InvalidTokenException;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.Firestore;
@@ -23,10 +24,10 @@ public class UserServiceImpl implements UserService {
 	private TokenServiceImpl tokenServiceImpl;
 
 	@Override
-	public void saveUser(User user, String token) throws InterruptedException, ExecutionException {
+	public UserSavedResponse saveUser(User user, String token) throws InterruptedException, ExecutionException {
 		
-		boolean response = tokenServiceImpl.validToken(token);
-		if(!response) throw new InvalidTokenException("Token no válido");
+		boolean validTokenResponse = tokenServiceImpl.validToken(token);
+		if(!validTokenResponse) throw new InvalidTokenException("Token no válido");
 		
         Map<String, Object> docData = new HashMap<>();
         docData.put("rut", user.rut());
@@ -35,8 +36,12 @@ public class UserServiceImpl implements UserService {
         docData.put("edad", user.edad());
         
         ApiFuture<WriteResult> responseFirebase = firebase.collection("users").document(user.rut()).set(docData);
-        WriteResult result = responseFirebase.get();
-        System.out.println("Document written at: " + result.getUpdateTime());
+        WriteResult writeResultFirebase = responseFirebase.get();
+        
+        return UserSavedResponse.builder()
+        		.message("User stored in Firebase successfully.")
+        		.dateToOperation(writeResultFirebase.getUpdateTime().toString())
+        		.build();
 		
 	}
 
