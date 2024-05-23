@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.TokenResponseDTO;
+import com.example.demo.dto.ValidTokenResponse;
 import com.example.demo.service.TokenService;
 
 @RestController
@@ -22,7 +23,7 @@ public class TokenController {
 	}
 	
 	@GetMapping("/validToken")
-	public boolean validToken(@RequestParam String token) {
+	public ValidTokenResponse validToken(@RequestParam String token) {
 		return tokenService.validToken(token);
 	}
 	

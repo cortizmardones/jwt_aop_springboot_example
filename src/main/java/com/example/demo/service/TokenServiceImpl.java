@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.TokenResponseDTO;
+import com.example.demo.dto.ValidTokenResponse;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -34,6 +35,7 @@ public class TokenServiceImpl implements TokenService {
         Date expiryDate = new Date(now.getTime() + 3600000); // 1 hora de expiración
         
 		return TokenResponseDTO.builder()
+				.subject(subject)
 				.token(Jwts.builder()
 						.setSubject(subject)
 						.setIssuedAt(now)
@@ -46,7 +48,7 @@ public class TokenServiceImpl implements TokenService {
 		
 	}
 	
-    public boolean validToken(String token) {
+    public ValidTokenResponse validToken(String token) {
         try {
     		byte[] secretBytes = Base64.getDecoder().decode(secretKey);
     		Key key = Keys.hmacShaKeyFor(secretBytes);
@@ -65,14 +67,14 @@ public class TokenServiceImpl implements TokenService {
 //            System.out.println("bodyClaimPersonalizado: " + claimsBody.get("bodyClaimPersonalizado"));
 //            System.out.println();
             
-            return true;
+            return ValidTokenResponse.builder().tokenType("JWT").state(true).build();
             
         } catch (SecurityException | IllegalArgumentException e) {
-        	System.out.println("Token Inválido: " + token + "\n");
-            return false;
+        	//System.out.println("Token Inválido: " + token + "\n");
+        	return ValidTokenResponse.builder().tokenType("JWT").state(false).build();
         } catch (ExpiredJwtException e) {
-        	System.out.println("Token Expirado: " + token + "\n");
-            return false;
+        	//System.out.println("Token Expirado: " + token + "\n");
+        	return ValidTokenResponse.builder().tokenType("JWT").state(false).build();
         }
     }
     

@@ -6,9 +6,9 @@ import lombok.Builder;
 public record User(
 		
 		String rut,
-		String nombre,
-		String apellido,
-		String edad
+		String name,
+		String lastName,
+		String age
 		
 		) {
 

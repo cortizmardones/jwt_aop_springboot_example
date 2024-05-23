@@ -1,7 +1,5 @@
 package com.example.demo.controller;
 
-import java.util.concurrent.ExecutionException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +19,7 @@ public class UserController {
 	UserService userService;
 	
 	@PostMapping("/saveUser")
-	public UserSavedResponse saveUser(@RequestBody User user, @RequestParam String token) throws InterruptedException, ExecutionException {
+	public UserSavedResponse saveUser(@RequestBody User user, @RequestParam String token) {
 		return userService.saveUser(user, token);
 	}
 

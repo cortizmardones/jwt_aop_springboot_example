@@ -16,11 +16,13 @@ import com.google.firebase.cloud.FirestoreClient;
 public class FirebaseConfig {
 
     @Bean
-    public Firestore firestore() throws IOException {
+    Firestore firestore() throws IOException {
+    	
         ClassPathResource resource = new ClassPathResource("usuarios-dba5f-firebase-adminsdk-q5u02-e9adf0a04c.json");
 
         GoogleCredentials credentials = GoogleCredentials.fromStream(resource.getInputStream());
-        FirebaseOptions options = new FirebaseOptions.Builder()
+        @SuppressWarnings("deprecation")
+		FirebaseOptions options = new FirebaseOptions.Builder()
             .setCredentials(credentials)
             .build();
 

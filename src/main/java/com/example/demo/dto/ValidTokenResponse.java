@@ -3,10 +3,10 @@ package com.example.demo.dto;
 import lombok.Builder;
 
 @Builder
-public record TokenResponseDTO(
+public record ValidTokenResponse(
 		
-		String subject,
-		String token
+		String tokenType,
+		boolean state
 		
 		) {
 

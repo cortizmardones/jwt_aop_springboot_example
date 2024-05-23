@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.User;
 import com.example.demo.dto.UserSavedResponse;
+import com.example.demo.dto.ValidTokenResponse;
 import com.example.demo.exception.InvalidTokenException;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.Firestore;
@@ -24,25 +25,32 @@ public class UserServiceImpl implements UserService {
 	private TokenServiceImpl tokenServiceImpl;
 
 	@Override
-	public UserSavedResponse saveUser(User user, String token) throws InterruptedException, ExecutionException {
+	public UserSavedResponse saveUser(User user, String token) {
 		
-		boolean validTokenResponse = tokenServiceImpl.validToken(token);
-		if(!validTokenResponse) throw new InvalidTokenException("Token no válido");
+		ValidTokenResponse validTokenResponse = tokenServiceImpl.validToken(token);
+		if(!validTokenResponse.state()) throw new InvalidTokenException("Invalid Token.");
 		
         Map<String, Object> docData = new HashMap<>();
         docData.put("rut", user.rut());
-        docData.put("nombre", user.nombre());
-        docData.put("apellido",user.apellido());
-        docData.put("edad", user.edad());
+        docData.put("name", user.name());
+        docData.put("lastName",user.lastName());
+        docData.put("age", user.age());
+        docData.put("active", true);
         
         ApiFuture<WriteResult> responseFirebase = firebase.collection("users").document(user.rut()).set(docData);
-        WriteResult writeResultFirebase = responseFirebase.get();
-        
-        return UserSavedResponse.builder()
-        		.message("User stored in Firebase successfully.")
-        		.dateToOperation(writeResultFirebase.getUpdateTime().toString())
-        		.build();
-		
+        WriteResult writeResultFirebase;
+		try {
+			writeResultFirebase = responseFirebase.get();
+	        return UserSavedResponse.builder()
+	        		.message("User stored in Firebase successfully.")
+	        		.dateToOperation(writeResultFirebase.getUpdateTime().toString())
+	        		.build();
+		} catch (InterruptedException | ExecutionException e) {
+	        return UserSavedResponse.builder()
+	        		.message("There was a problem storing the user in firebase: ".concat(e.getMessage()))
+	        		.dateToOperation("")
+	        		.build();
+		}
 	}
 
 }
