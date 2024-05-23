@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class TokenAspect {
 	
-	@Before("execution(* com.example.demo.service.*.*(..))")
+	@Before("@annotation(TrackingAnotation)") // A través de una excepción personalizada @LogExecutions
+	//@Before("execution(* com.example.demo.service.*.*(..))") Usando rutas especificas.
 	public void beforeGetToken(JoinPoint joinPoint) {
 		
         String methodName = joinPoint.getSignature().getName();
@@ -28,7 +29,8 @@ public class TokenAspect {
 	}
 	
 	
-    @AfterReturning(pointcut = "execution(* com.example.demo.service.*.*(..))", returning = "result")
+	@AfterReturning(value = "@annotation(TrackingAnotation)", returning = "result")
+    //@AfterReturning(pointcut = "execution(* com.example.demo.service.*.*(..))", returning = "result")
     public void afterGetToken(JoinPoint joinPoint, Object result) {
     	
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();

@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.aspect.TrackingAnotation;
 import com.example.demo.dto.User;
 import com.example.demo.dto.UserSavedResponse;
 import com.example.demo.dto.ValidTokenResponse;
@@ -25,6 +26,7 @@ public class UserServiceImpl implements UserService {
 	private TokenServiceImpl tokenServiceImpl;
 
 	@Override
+	@TrackingAnotation
 	public UserSavedResponse saveUser(User user, String token) {
 		
 		ValidTokenResponse validTokenResponse = tokenServiceImpl.validToken(token);
