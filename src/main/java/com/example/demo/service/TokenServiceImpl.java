@@ -48,7 +48,13 @@ public class TokenServiceImpl implements TokenService {
 		
 	}
 	
-    public ValidTokenResponse validToken(String token) {
+    public ValidTokenResponse validToken(String authorizationHeader) {
+    	
+		if (authorizationHeader == null) return ValidTokenResponse.builder().tokenType("JWT").isValid(false).errorMessage("Token Null").build();
+		if (!authorizationHeader.startsWith("Bearer ")) return ValidTokenResponse.builder().tokenType("JWT").isValid(false).errorMessage("You did not provide a bearer token").build();
+		
+		String token = authorizationHeader.substring(7);
+    	
         try {
     		byte[] secretBytes = Base64.getDecoder().decode(secretKey);
     		Key key = Keys.hmacShaKeyFor(secretBytes);
@@ -67,14 +73,12 @@ public class TokenServiceImpl implements TokenService {
 //            System.out.println("bodyClaimPersonalizado: " + claimsBody.get("bodyClaimPersonalizado"));
 //            System.out.println();
             
-            return ValidTokenResponse.builder().tokenType("JWT").state(true).build();
+            return ValidTokenResponse.builder().tokenType("JWT").isValid(true).errorMessage("").build();
             
-        } catch (SecurityException | IllegalArgumentException e) {
-        	//System.out.println("Token Inválido: " + token + "\n");
-        	return ValidTokenResponse.builder().tokenType("JWT").state(false).build();
-        } catch (ExpiredJwtException e) {
-        	//System.out.println("Token Expirado: " + token + "\n");
-        	return ValidTokenResponse.builder().tokenType("JWT").state(false).build();
+        } catch (SecurityException | IllegalArgumentException e) {	//System.out.println("Token Inválido: " + token + "\n");
+        	return ValidTokenResponse.builder().tokenType("JWT").isValid(false).errorMessage(e.getMessage()).build();
+        } catch (ExpiredJwtException e) {	//System.out.println("Token Expirado: " + token + "\n");
+        	return ValidTokenResponse.builder().tokenType("JWT").isValid(false).errorMessage(e.getMessage()).build();
         }
     }
     

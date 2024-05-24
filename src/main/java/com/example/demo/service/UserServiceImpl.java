@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
 	public UserSavedResponse saveUser(User user, String token) {
 		
 		ValidTokenResponse validTokenResponse = tokenServiceImpl.validToken(token);
-		if(!validTokenResponse.state()) throw new InvalidTokenException("Invalid Token.");
+		if(!validTokenResponse.isValid()) throw new InvalidTokenException(validTokenResponse.errorMessage());
 		
         Map<String, Object> docData = new HashMap<>();
         docData.put("rut", user.rut());

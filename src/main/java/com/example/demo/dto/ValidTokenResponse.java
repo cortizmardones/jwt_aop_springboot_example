@@ -6,7 +6,8 @@ import lombok.Builder;
 public record ValidTokenResponse(
 		
 		String tokenType,
-		boolean state
+		boolean isValid,
+		String errorMessage
 		
 		) {
 
