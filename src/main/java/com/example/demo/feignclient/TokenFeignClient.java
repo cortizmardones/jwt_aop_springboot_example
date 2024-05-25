@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.example.demo.dto.ValidTokenResponse;
 
-@FeignClient(name = "TokenFeignClient", url = "http://localhost:8086/demo/v1/token")
+import feign.FeignException;
+
+@FeignClient(name = "TokenFeignClient", url = "http://localhost:8086/demo/v1/tosdfsdfken")
 public interface TokenFeignClient {
 	
     @GetMapping("/validToken")
-    @Retryable(retryFor = { Exception.class }, maxAttempts = 3, backoff = @Backoff(delay = 1000))
+    @Retryable(retryFor = { FeignException.class }, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     ValidTokenResponse validToken(@RequestHeader("Authorization") String token);
 
 }
