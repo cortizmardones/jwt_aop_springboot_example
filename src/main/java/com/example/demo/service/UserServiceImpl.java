@@ -12,6 +12,7 @@ import com.example.demo.dto.User;
 import com.example.demo.dto.UserSavedResponse;
 import com.example.demo.dto.ValidTokenResponse;
 import com.example.demo.exception.InvalidTokenException;
+import com.example.demo.feignclient.TokenFeignClient;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.WriteResult;
@@ -23,13 +24,13 @@ public class UserServiceImpl implements UserService {
 	private Firestore firebase;
 	
 	@Autowired
-	private TokenServiceImpl tokenServiceImpl;
+	private TokenFeignClient tokenFeignClient;
 
 	@Override
 	@TrackingAnotation
 	public UserSavedResponse saveUser(User user, String token) {
 		
-		ValidTokenResponse validTokenResponse = tokenServiceImpl.validToken(token);
+		ValidTokenResponse validTokenResponse = tokenFeignClient.validToken(token);
 		if(!validTokenResponse.isValid()) throw new InvalidTokenException(validTokenResponse.errorMessage());
 		
         Map<String, Object> docData = new HashMap<>();

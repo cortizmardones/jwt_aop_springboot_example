@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.example.demo.dto.User;
 import com.example.demo.dto.ValidTokenResponse;
+import com.example.demo.feignclient.TokenFeignClient;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
@@ -31,7 +32,7 @@ public class UserServiceImplTest {
 	private Firestore firebase;
 	
 	@MockBean
-	private TokenServiceImpl tokenServiceImpl;
+	private TokenFeignClient tokenFeignClient;
 	
 	
 	@Test
@@ -58,7 +59,7 @@ public class UserServiceImplTest {
         when(collectionReference.document("11111111-1")).thenReturn(documentReference);
         when(documentReference.set(docData)).thenReturn(apiFuture);
         
-		when(tokenServiceImpl.validToken("Bearer token1234")).thenReturn(ValidTokenResponse.builder().tokenType("JWT").isValid(true).errorMessage("").build());
+		when(tokenFeignClient.validToken("Bearer token1234")).thenReturn(ValidTokenResponse.builder().tokenType("JWT").isValid(true).errorMessage("").build());
 		
 		userService.saveUser(User.builder().name("dummyName").lastName("dummyLastName").age("30").rut("11111111-1").build(), "Bearer token1234");
 		

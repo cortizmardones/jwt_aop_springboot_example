@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import feign.FeignException.FeignClientException;
+
 @ControllerAdvice
 public class ExceptionHandlerAdvice {
 
@@ -21,6 +23,19 @@ public class ExceptionHandlerAdvice {
 				.build();
 
 		return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+	}
+	
+	@ExceptionHandler(FeignClientException.class)
+	public ResponseEntity<ErrorResponse> handleFeignClientException(FeignClientException ex) {
+
+		ErrorResponse errorResponse = ErrorResponse.builder()
+				.errorName("FeignClientException")
+				.errorCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+				.errorMessage(ex.getMessage())
+				.timestamp(LocalDateTime.now())
+				.build();
+
+		return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }
