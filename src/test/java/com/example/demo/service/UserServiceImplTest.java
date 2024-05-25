@@ -47,6 +47,7 @@ public class UserServiceImplTest {
         
         // Mocks pruebas firebase.
         WriteResult writeResult = mock(WriteResult.class);
+		@SuppressWarnings("unchecked")
 		ApiFuture<WriteResult> apiFuture = mock(ApiFuture.class);
         CollectionReference collectionReference = mock(CollectionReference.class);
         DocumentReference documentReference = mock(DocumentReference.class);

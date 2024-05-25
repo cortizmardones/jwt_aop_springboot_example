@@ -1,5 +1,8 @@
 package com.example.demo.aspect;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -9,6 +12,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
+
+import static com.example.demo.utils.Constant.*;
 
 @Aspect
 @Component
@@ -33,6 +38,8 @@ public class TokenAspect {
             System.out.println("Parameter " + (counter.get() +1) + ": ParameterName: " + parameter + ", ParameterType: " + parameterTypes[counter.get()].getSimpleName() + ", ParameterValue: " + args[counter.get()]);
             counter.getAndIncrement();
         });
+        
+        System.out.println("TimeStamp: " + getDate());
 		
 		System.out.println("################### Finish Tracking ###################");
 		System.out.println("");
@@ -56,9 +63,21 @@ public class TokenAspect {
             System.out.println("Return: Type: " + result.getClass().getSimpleName() + " , Value: " + result);
         }
         
+        System.out.println("TimeStamp: " + getDate());
+        
 		System.out.println("################### Finish Tracking ###################");
 		System.out.println("");
     }
+	
+	public String getDate() {
+        ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneId.of(CHILE_TIME_ZONE));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TIME_FORMATTER);
+        return zonedDateTime.format(formatter);
+	}
+	
+	//INFO PARA TIMESTAMP
+	//CLT (Chile Standard Time): UTC-4, es la zona horaria estándar durante la mayor parte del año.
+	//CLST (Chile Summer Time): UTC-3, es la zona horaria utilizada durante el horario de verano.
     
     
     //ESTA ES MI FORMA (ME GUSTA MAS)
