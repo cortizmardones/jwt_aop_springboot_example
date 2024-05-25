@@ -12,17 +12,17 @@ import feign.FeignException.FeignClientException;
 @ControllerAdvice
 public class ExceptionHandlerAdvice {
 
-	@ExceptionHandler(InvalidTokenException.class)
-	public ResponseEntity<ErrorResponse> handleInvalidTokenException(InvalidTokenException ex) {
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ErrorResponse> handleException(Exception ex) {
 
 		ErrorResponse errorResponse = ErrorResponse.builder()
-				.errorName("InvalidTokenException")
-				.errorCode(HttpStatus.UNAUTHORIZED.value())
+				.errorName("Exception")
+				.errorCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
 				.errorMessage(ex.getMessage())
 				.timestamp(LocalDateTime.now())
 				.build();
 
-		return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+		return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@ExceptionHandler(FeignClientException.class)
@@ -36,6 +36,19 @@ public class ExceptionHandlerAdvice {
 				.build();
 
 		return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ExceptionHandler(InvalidTokenException.class)
+	public ResponseEntity<ErrorResponse> handleInvalidTokenException(InvalidTokenException ex) {
+
+		ErrorResponse errorResponse = ErrorResponse.builder()
+				.errorName("InvalidTokenException")
+				.errorCode(HttpStatus.UNAUTHORIZED.value())
+				.errorMessage(ex.getMessage())
+				.timestamp(LocalDateTime.now())
+				.build();
+
+		return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
 	}
 
 }
