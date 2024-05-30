@@ -10,11 +10,15 @@ import com.example.demo.dto.ValidTokenResponse;
 
 import feign.FeignException;
 
-@FeignClient(name = "TokenFeignClient", url = "http://localhost:8086/demo/v1/tosdfsdfken")
+
+@FeignClient(name = "TokenFeignClient", url = "http://localhost:8086/demo/v1/token")
 public interface TokenFeignClient {
 	
+	
+	// Metodo con patrón RETRY (5 reintentos cada 5 segundos)
+	
     @GetMapping("/validToken")
-    @Retryable(retryFor = { FeignException.class }, maxAttempts = 3, backoff = @Backoff(delay = 1000))
+    @Retryable(retryFor = { FeignException.class }, maxAttempts = 5, backoff = @Backoff(delay = 5000))
     ValidTokenResponse validToken(@RequestHeader("Authorization") String token);
-
+    
 }
