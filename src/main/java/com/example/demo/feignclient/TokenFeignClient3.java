@@ -1,11 +1,14 @@
 package com.example.demo.feignclient;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.example.demo.dto.ValidTokenResponse;
 
+import feign.FeignException;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
@@ -19,6 +22,7 @@ public interface TokenFeignClient3 {
     
     //Cuando el Circuit Breaker se abre lanza la excepción CallNotPermittedException , es importante capturar esa excepción en el metodo fallback.
     default ValidTokenResponse fallback(CallNotPermittedException e) {
+    	//throw e;
         return new ValidTokenResponse("JWT", false, e.getMessage());
     }
     

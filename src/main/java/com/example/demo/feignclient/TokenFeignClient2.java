@@ -2,7 +2,6 @@ package com.example.demo.feignclient;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.retry.annotation.CircuitBreaker;
-import org.springframework.retry.annotation.Recover;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
@@ -22,7 +21,7 @@ public interface TokenFeignClient2 {
 	// "resetTimeout" Tiempo para reintentar cerrar el circuito.
 	
     @GetMapping("/validToken")
-    @CircuitBreaker(include = {FeignException.class}, maxAttempts = 5, openTimeout = 20000, resetTimeout = 15000)
+    @CircuitBreaker(value = {Exception.class}, maxAttempts = 5, openTimeout = 20000, resetTimeout = 15000)
     ValidTokenResponse validToken(@RequestHeader("Authorization") String token);
     
 
