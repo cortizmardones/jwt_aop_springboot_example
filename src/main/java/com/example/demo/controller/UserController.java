@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.User;
 import com.example.demo.dto.UserSavedResponse;
 import com.example.demo.service.UserService;
+import com.example.demo.utils.SanitizationUtil;
 
 @RestController
 @RequestMapping("/v1/user")
@@ -20,7 +21,7 @@ public class UserController {
 	
 	@PostMapping("/saveUser")
 	public UserSavedResponse saveUser(@RequestBody User user, @RequestHeader("Authorization") String token) {
-		return userService.saveUser(user, token);
+		return userService.saveUser(user, SanitizationUtil.sanitizeInput(token));
 	}
 
 }
