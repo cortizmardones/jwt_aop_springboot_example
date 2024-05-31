@@ -21,7 +21,7 @@ public class UserController {
 	
 	@PostMapping("/saveUser")
 	public UserSavedResponse saveUser(@RequestBody User user, @RequestHeader("Authorization") String token) {
-		return userService.saveUser(user, SanitizationUtil.sanitizeInput(token));
+		return userService.saveUser(SanitizationUtil.sanitizeUser(user), SanitizationUtil.sanitizeInput(token));
 	}
 
 }
