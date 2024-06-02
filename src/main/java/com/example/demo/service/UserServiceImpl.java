@@ -12,10 +12,13 @@ import com.example.demo.dto.User;
 import com.example.demo.dto.UserSavedResponse;
 import com.example.demo.dto.ValidTokenResponse;
 import com.example.demo.exception.InvalidTokenException;
+import com.example.demo.feignclient.TokenFeignClient;
 import com.example.demo.feignclient.TokenFeignClient3;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.WriteResult;
+
+import static com.example.demo.utils.Constant.EMAIL_SYSTEM;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -24,7 +27,10 @@ public class UserServiceImpl implements UserService {
 	private Firestore firebase;
 	
 	@Autowired
-	private TokenFeignClient3 tokenFeignClient;
+	private TokenFeignClient tokenFeignClient;
+	
+	@Autowired
+	private EmailService emailService;
 	
 	@Override
 	@TrackingAnotation
@@ -44,6 +50,9 @@ public class UserServiceImpl implements UserService {
         WriteResult writeResultFirebase;
 		try {
 			writeResultFirebase = responseFirebase.get();
+			
+			emailService.sendSimpleMessage(EMAIL_SYSTEM, "Guardado User Firebase-SpringBoot", "Se creo el siguiente registro en Firebase : " + docData.toString());
+			
 	        return UserSavedResponse.builder()
 	        		.message("User stored in Firebase successfully.")
 	        		.dateToOperation(writeResultFirebase.getUpdateTime().toString())
